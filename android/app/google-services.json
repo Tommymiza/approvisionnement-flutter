@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "951583379553",
+    "project_id": "approvisionnement-4709d",
+    "storage_bucket": "approvisionnement-4709d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:951583379553:android:f5fb434beabd556ffe5a20",
+        "android_client_info": {
+          "package_name": "com.tommy.approvisionnement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "951583379553-29hr1somu9e2ps7iqsmtcmtpep0u4an1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tommy.approvisionnement",
+            "certificate_hash": "2671e454735af871d03effc37a2452aaa8371800"
+          }
+        },
+        {
+          "client_id": "951583379553-81jtlqa8dd58jj0sb72t0a4blbcbk60k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjUWvdMm3fnJw0DTz2Tb4M4atm7a1osvM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "951583379553-0kafmf3mih3sohujgskaind80s6e40hv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
