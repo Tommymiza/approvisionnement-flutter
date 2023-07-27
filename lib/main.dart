@@ -2,8 +2,10 @@ import 'package:approvisionnement/data/consumer/consumer_bloc.dart';
 import 'package:approvisionnement/data/current/current_bloc.dart';
 import 'package:approvisionnement/data/dialogloading/loading_dialog_bloc.dart';
 import 'package:approvisionnement/data/foods/food_bloc.dart';
+import 'package:approvisionnement/data/history/history_bloc.dart';
 import 'package:approvisionnement/data/iconloading/loading_icon_bloc.dart';
 import 'package:approvisionnement/data/loading/loading_bloc.dart';
+import 'package:approvisionnement/data/loadingpage/loadingpage_bloc.dart';
 import 'package:approvisionnement/data/providers/provider_bloc.dart';
 import 'package:approvisionnement/data/redirect/redirect_bloc.dart';
 import 'package:approvisionnement/tools/colors.dart';
@@ -26,6 +28,8 @@ void main() async {
         BlocProvider<ProviderBloc>(create: (context) => ProviderBloc()),
         BlocProvider<FoodBloc>(create: (context) => FoodBloc()),
         BlocProvider<ConsumerBloc>(create: (context) => ConsumerBloc()),
+        BlocProvider<HistoryBloc>(create: (context) => HistoryBloc()),
+        BlocProvider<LoadingPageBloc>(create: (context) => LoadingPageBloc()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

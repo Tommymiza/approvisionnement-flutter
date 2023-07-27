@@ -1,10 +1,13 @@
 import 'package:approvisionnement/data/consumer/consumer_bloc.dart';
 import 'package:approvisionnement/data/current/current_bloc.dart';
 import 'package:approvisionnement/data/foods/food_bloc.dart';
+import 'package:approvisionnement/data/history/history_bloc.dart';
+import 'package:approvisionnement/data/loadingpage/loadingpage_bloc.dart';
 import 'package:approvisionnement/data/providers/provider_bloc.dart';
 import 'package:approvisionnement/data/redirect/redirect_bloc.dart';
 import 'package:approvisionnement/pages/food.dart';
 import 'package:approvisionnement/pages/history.dart';
+import 'package:approvisionnement/pages/loading.dart';
 import 'package:approvisionnement/pages/provider.dart';
 import 'package:approvisionnement/pages/consumer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,10 +24,19 @@ class Struct extends StatefulWidget {
 class _StructState extends State<Struct> {
   @override
   void initState() {
-    context.read<ProviderBloc>().add(GetProvider());
-    context.read<FoodBloc>().add(GetFood());
-    context.read<ConsumerBloc>().add(GetConsumers());
+    refreshData();
     super.initState();
+  }
+
+  void refreshData() {
+    context.read<LoadingPageBloc>().add(SetLoadingPage());
+    Future.delayed(const Duration(seconds: 5), () {
+      context.read<ProviderBloc>().add(GetProvider());
+      context.read<FoodBloc>().add(GetFood());
+      context.read<ConsumerBloc>().add(GetConsumers());
+      context.read<HistoryBloc>().add(GetHistory());
+      context.read<LoadingPageBloc>().add(ClearLoadingPage());
+    });
   }
 
   final List<Widget> pages = [
@@ -38,8 +50,7 @@ class _StructState extends State<Struct> {
 
   @override
   Widget build(BuildContext context) {
-    String email =
-        context.read<CurrentBloc>().state!.email!;
+    String email = context.read<CurrentBloc>().state!.email!;
     return BlocListener<CurrentBloc, User?>(
       listener: (context, state) {
         if (state == null) {
@@ -56,8 +67,13 @@ class _StructState extends State<Struct> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const SizedBox(
-                width: 30,
+              GestureDetector(
+                onTap: refreshData,
+                child: const Icon(
+                  Icons.refresh_rounded,
+                  size: 30,
+                  color: Colors.black,
+                ),
               ),
               Container(
                 padding: const EdgeInsets.all(8),
@@ -86,8 +102,14 @@ class _StructState extends State<Struct> {
             ],
           ),
         ),
-        body: SingleChildScrollView(
-          child: pages[page],
+        body: BlocBuilder<LoadingPageBloc, bool>(
+          builder: (context, state) {
+            return state
+                ? const Loading()
+                : SingleChildScrollView(
+                    child: pages[page],
+                  );
+          },
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[

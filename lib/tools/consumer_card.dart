@@ -1,4 +1,5 @@
 import 'package:approvisionnement/models/consumer.dart';
+import 'package:approvisionnement/tools/remove_stock_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -16,7 +17,8 @@ class ConsumerCard extends StatelessWidget {
       child: Container(
         width: 340,
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-        padding: const EdgeInsets.only(top: 10, right: 20, bottom: 10, left: 10),
+        padding:
+            const EdgeInsets.only(top: 10, right: 20, bottom: 10, left: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           gradient: LinearGradient(colors: [
@@ -79,28 +81,15 @@ class ConsumerCard extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                GestureDetector(
-                  onTap: () async {
-                    final Uri email = Uri.parse('mailto:${c.email}');
-                    await launchUrl(email);
+                ElevatedButton(
+                  style: const ButtonStyle(
+                      elevation: MaterialStatePropertyAll(1),
+                      shape: MaterialStatePropertyAll(CircleBorder(
+                          side: BorderSide.none, eccentricity: 0.05))),
+                  child: const Icon(Icons.add_shopping_cart_rounded),
+                  onPressed: () {
+                    showRemoveStockDialog(context, c);
                   },
-                  child: Text(
-                    c.email,
-                    style: TextStyle(fontSize: 12, decoration: TextDecoration.underline, color: Theme.of(context).primaryColor),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    final Uri phone = Uri.parse('tel:${c.phone}');
-                    await launchUrl(phone);
-                  },
-                  child: Text(
-                    c.phone,
-                    style: TextStyle(fontSize: 12, decoration: TextDecoration.underline, color: Theme.of(context).primaryColor),
-                  ),
                 )
               ],
             )

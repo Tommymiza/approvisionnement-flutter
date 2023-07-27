@@ -129,11 +129,11 @@ class ProvCard extends StatelessWidget {
                                         shape: MaterialStatePropertyAll(
                                             CircleBorder(
                                                 side: BorderSide.none,
-                                                eccentricity: 0.1))),
+                                                eccentricity: 0.05))),
                                     child: const Icon(
                                         Icons.add_shopping_cart_rounded),
                                     onPressed: () {
-                                      showAddStockDialog(context, f, quantity);
+                                      showAddStockDialog(context, f, quantity, p);
                                     },
                                   )
                                 : const SizedBox();

@@ -1,10 +1,13 @@
+import 'package:approvisionnement/data/current/current_bloc.dart';
 import 'package:approvisionnement/data/foods/food_bloc.dart';
+import 'package:approvisionnement/data/history/history_bloc.dart';
 import 'package:approvisionnement/data/iconloading/loading_icon_bloc.dart';
 import 'package:approvisionnement/data/loading/loading_bloc.dart';
 import 'package:approvisionnement/data/providers/provider_bloc.dart';
 import 'package:approvisionnement/models/food_state.dart';
 import 'package:approvisionnement/models/prov.dart';
 import 'package:approvisionnement/services/food_service.dart';
+import 'package:approvisionnement/services/history_service.dart';
 import 'package:approvisionnement/services/provider_service.dart';
 import 'package:approvisionnement/tools/snackbar.dart';
 import 'package:approvisionnement/tools/update_provider_dialog.dart';
@@ -28,6 +31,7 @@ class _OneProviderState extends State<OneProvider> {
 
   @override
   Widget build(BuildContext context) {
+    String email = context.read<CurrentBloc>().state!.email!;
     return Scaffold(body: BlocBuilder<FoodBloc, List<FoodState>>(
       builder: (context, st) {
         return BlocBuilder<ProviderBloc, List<Prov>>(
@@ -74,8 +78,8 @@ class _OneProviderState extends State<OneProvider> {
                             Row(
                               children: [
                                 IconButton(
-                                    onPressed: () => showUpdateProviderDialog(
-                                        context, p),
+                                    onPressed: () =>
+                                        showUpdateProviderDialog(context, p),
                                     icon: const Icon(Icons.edit_square)),
                                 BlocBuilder<LoadingIconBloc, bool>(
                                   builder: (context, state) {
@@ -215,21 +219,35 @@ class _OneProviderState extends State<OneProvider> {
                                                       f.descri,
                                                       f.stock + value)
                                                   .then((res) {
-                                                context
-                                                    .read<LoadingBloc>()
-                                                    .add(ClearLoading());
-                                                if (res != null) {
+                                                HistoryService.addHistories(
+                                                        email,
+                                                        p.name,
+                                                        f.name,
+                                                        "${quantity.text} ${f.unit}",
+                                                        "Stock entry")
+                                                    .then((res) {
+                                                  if (res != null) {
+                                                    context
+                                                        .read<HistoryBloc>()
+                                                        .add(GetHistory());
+                                                    context
+                                                        .read<LoadingBloc>()
+                                                        .add(ClearLoading());
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(snackbar(
+                                                            "$value ${f.unit} of \"${f.name}\" has been added! 🤗"));
+                                                    context
+                                                        .read<FoodBloc>()
+                                                        .add(GetFood());
+                                                    Navigator.pop(context);
+                                                    return;
+                                                  }
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(snackbar(
-                                                          "$value ${f.unit} of \"${f.name}\" has been added! 🤗"));
-                                                  context
-                                                      .read<FoodBloc>()
-                                                      .add(GetFood());
-                                                  return;
-                                                }
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(snackbar(
-                                                        "Operation failed! 😭"));
+                                                          "Operation failed! 😭"));
+                                                  Navigator.pop(context);
+                                                });
                                               });
                                             } else {
                                               ScaffoldMessenger.of(context)

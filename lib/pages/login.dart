@@ -57,8 +57,8 @@ class _LoginState extends State<Login> {
                     height: 30,
                   ),
                   Image.asset(
-                    "assets/login.jpg",
-                    width: 300,
+                    "assets/login.png",
+                    width: 400,
                   ),
                   const SizedBox(
                     height: 60,
@@ -109,8 +109,8 @@ class _LoginState extends State<Login> {
                   ),
                   Text(
                     error,
-                    style:
-                        const TextStyle(color: Color.fromARGB(255, 228, 27, 13)),
+                    style: const TextStyle(
+                        color: Color.fromARGB(255, 228, 27, 13)),
                   ),
                   const SizedBox(
                     height: 15,
@@ -183,8 +183,12 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 20),
+                    child: const Text(
+                      "Or login with",
+                      style: TextStyle(color: Colors.black54),
+                    ),
                   ),
                   GestureDetector(
                     onTap: () async {
@@ -202,7 +206,10 @@ class _LoginState extends State<Login> {
                         print('Error: $err');
                       });
                     },
-                    child: Image.asset("assets/Google-Logo.png", width: 50,),
+                    child: Image.asset(
+                      "assets/Google-Logo.png",
+                      width: 50,
+                    ),
                   )
                 ]),
               ),

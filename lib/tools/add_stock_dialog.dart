@@ -1,7 +1,11 @@
+import 'package:approvisionnement/data/current/current_bloc.dart';
 import 'package:approvisionnement/data/dialogloading/loading_dialog_bloc.dart';
 import 'package:approvisionnement/data/foods/food_bloc.dart';
+import 'package:approvisionnement/data/history/history_bloc.dart';
 import 'package:approvisionnement/models/food_state.dart';
+import 'package:approvisionnement/models/prov.dart';
 import 'package:approvisionnement/services/food_service.dart';
+import 'package:approvisionnement/services/history_service.dart';
 import 'package:approvisionnement/tools/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +13,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 Future<void> showAddStockDialog(
-    BuildContext context, FoodState f, TextEditingController quantity) {
+    BuildContext context, FoodState f, TextEditingController quantity, Prov p) {
+  String email = context.read<CurrentBloc>().state!.email!;
   return showDialog<void>(
     context: context,
     builder: (context) => Dialog(
@@ -79,19 +84,24 @@ Future<void> showAddStockDialog(
                           FoodService.updateFood(
                                   f.id, f.name, f.descri, f.stock + value)
                               .then((res) {
-                            ctx
-                                .read<LoadingDialogBloc>()
-                                .add(ClearLoadingDialog());
-                            if (res != null) {
-                              ScaffoldMessenger.of(context).showSnackBar(snackbar(
-                                  "$value ${f.unit} of \"${f.name}\" has been added! 🤗"));
-                              ctx.read<FoodBloc>().add(GetFood());
+                            HistoryService.addHistories(email, p.name, f.name,
+                                    "${quantity.text} ${f.unit}", "Stock entry")
+                                .then((res) {
+                              if (res != null) {
+                                ctx.read<HistoryBloc>().add(GetHistory());
+                                ctx
+                                    .read<LoadingDialogBloc>()
+                                    .add(ClearLoadingDialog());
+                                ScaffoldMessenger.of(context).showSnackBar(snackbar(
+                                    "$value ${f.unit} of \"${f.name}\" has been added! 🤗"));
+                                ctx.read<FoodBloc>().add(GetFood());
+                                Navigator.pop(context);
+                                return;
+                              }
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  snackbar("Operation failed! 😭"));
                               Navigator.pop(context);
-                              return;
-                            }
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackbar("Operation failed! 😭"));
-                            Navigator.pop(context);
+                            });
                           });
                         },
                   child: Row(

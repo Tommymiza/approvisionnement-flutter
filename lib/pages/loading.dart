@@ -8,7 +8,7 @@ class Loading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: LottieBuilder.asset(
-        "assets/lottie/blue-loading.json",
+        "assets/blue-loading.json",
         width: 150,
         height: 150,
         frameRate: FrameRate(60),
