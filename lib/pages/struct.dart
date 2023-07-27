@@ -39,10 +39,10 @@ class _StructState extends State<Struct> {
   @override
   Widget build(BuildContext context) {
     String email =
-        context.read<CurrentBloc>().state?.email ?? "tommymiza20@gmail.com";
+        context.read<CurrentBloc>().state!.email!;
     return BlocListener<CurrentBloc, User?>(
       listener: (context, state) {
-        if (state != null) {
+        if (state == null) {
           context
               .read<RedirectBloc>()
               .add(RedirectWithUrl(url: '/', context: context));

@@ -17,7 +17,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   @override
   void initState() {
-    if (context.read<CurrentBloc>().state == null) {
+    if (context.read<CurrentBloc>().state != null) {
       context
           .read<RedirectBloc>()
           .add(RedirectWithUrl(url: "/appro", context: context));
